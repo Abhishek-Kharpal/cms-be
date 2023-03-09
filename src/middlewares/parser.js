@@ -4,9 +4,7 @@ const parser = (req, res, next) => {
     req.params.id = parseInt(id);
   }
   catch(err){
-    return res.status(400).json({
-      message: 'Invalid id'
-    });
+    throw new Error('Invalid id');
   }
   next();
 };
