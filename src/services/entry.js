@@ -38,9 +38,64 @@ const deleteEntry = async (id) => {
   });
 };
 
+const addFieldToEntries = async (fieldId) => {
+  const addedField = await db.field.findOne({
+    where: { id: fieldId }
+  });
+  if(!addedField) {
+    throw new Error('Invalid field id');
+  }
+  const entries = await db.entry.findAll({
+    where: { collectionId: addedField.collectionId }
+  });
+  await Promise.all(entries.map(async entry => {
+    const entryValues = entry.entryValues;
+    entryValues[addedField.name] = 'NONE';
+    await updateEntry(entry.id, entry.collectionId, entryValues);
+    return entry;
+  }));
+};
+
+const updateFieldInEntries = async (fieldName, collectionId,id) => {
+  const entries = await db.entry.findAll({
+    where: { collectionId }
+  });
+  const oldField = await db.field.findOne({
+    where: { id }
+  });
+  await Promise.all(entries.map(async entry => {
+    const entryValues = entry.entryValues;
+    entryValues[fieldName] = 'NONE';
+    delete entryValues[oldField.name];
+    await updateEntry(entry.id, entry.collectionId, entryValues);
+    return entry;
+  }));
+};
+
+const deleteFieldFromEntries = async (fieldId) => {
+  const deletedField = await db.field.findOne({
+    where: { id: fieldId }
+  });
+  if(!deletedField) {
+    throw new Error('Invalid field id');
+  }
+  const entries = await db.entry.findAll({
+    where: { collectionId: deletedField.collectionId }
+  });
+  await Promise.all(entries.map(async entry => {
+    const entryValues = entry.entryValues;
+    delete entryValues[deletedField.name];
+    await updateEntry(entry.id, entry.collectionId, entryValues);
+    return entry;
+  }));
+};
+
 module.exports = {
   getAllEntries,
   createEntry,
   updateEntry,
-  deleteEntry
+  deleteEntry,
+  addFieldToEntries,
+  updateFieldInEntries,
+  deleteFieldFromEntries
 };

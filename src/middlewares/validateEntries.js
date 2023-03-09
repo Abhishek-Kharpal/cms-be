@@ -13,8 +13,10 @@ const validateEntries = async (req, res, next) => {
   const entryValues = req.body.entryValues;
   const entriesKeys = Object.keys(entryValues);
   const fieldNames = fields.map(field => field.name);
+  if(entriesKeys.length !== fieldNames.length) {
+    throw new Error('Invalid number of fields');
+  }
   entriesKeys.forEach(key => {
-    console.log(key, fieldNames);
     if(!fieldNames.includes(key)) {
       throw new Error('Invalid field name');
     }

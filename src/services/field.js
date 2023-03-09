@@ -22,7 +22,7 @@ const createField = async (name, type, collectionId) => {
   return field;
 };
 
-const updateField = async (id, name, type) => {
+const updateField = async (id, name, collectionId,type) => {
   const field = await db.field.findOne({
     where: {
       id: id
@@ -31,6 +31,15 @@ const updateField = async (id, name, type) => {
   if(!field){
     throw new Error('Field not found');
   }
+  const collection = await db.collection.findOne({
+    where: {
+      id: collectionId
+    }
+  });
+  if(!collection){
+    throw new Error('Collection not found');
+  }
+  field.collectionId = collection.id;
   field.name = name;
   field.type = type.toUpperCase();
   await field.save();
