@@ -17,7 +17,7 @@ module.exports = (sequelize, DataTypes) => {
       });
       this.hasMany(models.field,{
         as: 'field',
-        foreignKey: 'collectionId'
+        foreignKey: 'collectionId',
       });
     }
   }
