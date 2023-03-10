@@ -1,4 +1,5 @@
 const db = require('../../database/models/index');
+const HttpError = require('../utils/customError');
 
 const getAllEntries = async () => {
   const entries = await db.entry.findAll();
@@ -18,13 +19,13 @@ const updateEntry = async (id, collectionId, entryValues) => {
     where: { id: collectionId }
   });
   if(!collection) {
-    throw new Error('Invalid collection id');
+    throw new HttpError('400,Invalid collection id');
   }
   const entry = await db.entry.findOne({
     where: { id }
   });
   if(!entry) {
-    throw new Error('Invalid entry id');
+    throw new HttpError(400,'Invalid entry id');
   }
   entry.collectionId = collectionId;
   entry.entryValues = entryValues;
@@ -43,7 +44,7 @@ const addFieldToEntries = async (fieldId) => {
     where: { id: fieldId }
   });
   if(!addedField) {
-    throw new Error('Invalid field id');
+    throw new HttpError(400,'Invalid field id');
   }
   const entries = await db.entry.findAll({
     where: { collectionId: addedField.collectionId }
@@ -77,7 +78,7 @@ const deleteFieldFromEntries = async (fieldId) => {
     where: { id: fieldId }
   });
   if(!deletedField) {
-    throw new Error('Invalid field id');
+    throw new HttpError(400,'Invalid field id');
   }
   const entries = await db.entry.findAll({
     where: { collectionId: deletedField.collectionId }

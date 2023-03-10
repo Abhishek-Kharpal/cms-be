@@ -1,5 +1,5 @@
 const db = require('../../database/models/index');
-
+const HttpError = require('../utils/customError');
 const getAllFields = async () => {
   const fields = await db.field.findAll();
   return fields;
@@ -12,7 +12,7 @@ const createField = async (name, type, collectionId) => {
     }
   });
   if(!collection){
-    throw new Error('Collection not found');
+    throw new HttpError(400,'Invalid collection id');
   }
   const field = await db.field.create({
     name: name,
@@ -29,7 +29,7 @@ const updateField = async (id, name, collectionId,type) => {
     }
   });
   if(!field){
-    throw new Error('Field not found');
+    throw new HttpError(400,'Invalid field id');
   }
   const collection = await db.collection.findOne({
     where: {
@@ -37,7 +37,7 @@ const updateField = async (id, name, collectionId,type) => {
     }
   });
   if(!collection){
-    throw new Error('Collection not found');
+    throw new HttpError(400,'Invalid collection id');
   }
   field.collectionId = collection.id;
   field.name = name;
@@ -53,7 +53,7 @@ const deleteField = async (id) => {
     }
   });
   if(!field){
-    throw new Error('Field not found');
+    throw new HttpError(400,'Invalid field id');
   }
   await field.destroy();
 };

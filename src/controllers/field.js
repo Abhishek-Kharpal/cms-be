@@ -1,12 +1,21 @@
 const fieldService = require('../services/field');
 const entryService = require('../services/entry');
+const HttpError = require('../utils/customError');
+
 const getAllFields = async (req, res) => {
   try{
     const fields = await fieldService.getAllFields();
     res.status(200).json(fields);
   }
-  catch(err){
-    res.status(500).json({ error: err.message });
+  catch (err) {
+    console.log(err.constructor);
+    switch (err.constructor) {
+    case HttpError:
+      res.status(err.code).json({ error: err.message });
+      break;
+    default:
+      res.status(500).json({ error: err.message });
+    }
   }
 };
 
@@ -17,8 +26,15 @@ const createField = async (req, res) => {
     await entryService.addFieldToEntries(field.id);
     res.status(200).json(field);
   }
-  catch(err){
-    res.status(500).json({ error: err.message });
+  catch (err) {
+    console.log(err.constructor);
+    switch (err.constructor) {
+    case HttpError:
+      res.status(err.code).json({ error: err.message });
+      break;
+    default:
+      res.status(500).json({ error: err.message });
+    }
   }
 };
 
@@ -30,8 +46,15 @@ const updateField = async (req, res) => {
     const field = await fieldService.updateField(id, name,collectionId, type);
     res.status(200).json(field);
   }
-  catch(err){
-    res.status(500).json({ error: err.message });
+  catch (err) {
+    console.log(err.constructor);
+    switch (err.constructor) {
+    case HttpError:
+      res.status(err.code).json({ error: err.message });
+      break;
+    default:
+      res.status(500).json({ error: err.message });
+    }
   }
 };
 
@@ -42,8 +65,15 @@ const deleteField = async (req, res) => {
     await fieldService.deleteField(id);
     res.status(204).json();
   }
-  catch(err){
-    res.status(500).json({ error: err.message });
+  catch (err) {
+    console.log(err.constructor);
+    switch (err.constructor) {
+    case HttpError:
+      res.status(err.code).json({ error: err.message });
+      break;
+    default:
+      res.status(500).json({ error: err.message });
+    }
   }
 };
 
