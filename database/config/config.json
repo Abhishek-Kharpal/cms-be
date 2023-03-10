@@ -3,16 +3,16 @@
     "username": "postgres",
     "password": "postgres",
     "database": "postgres",
-    "host": "localhost",
+    "host": "db-cms",
     "dialect": "postgres",
-    "port": 5433
+    "port": 5432
   },
   "test": {
     "username": "postgres",
     "password": "postgres",
     "database": "postgres",
-    "host": "localhost",
+    "host": "db-cms",
     "dialect": "postgres",
-    "port": 5433
+    "port": 5432
   }
 }
