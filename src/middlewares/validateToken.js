@@ -7,25 +7,22 @@ const validateToken = async (req, res, next) => {
       headers: {
         Authorization: `Bearer ${token}`
       }
-    })
-      .catch(() => {
-        res.status(401).json({
-          message: 'Unauthorized'
-        });
-      });
-    if (flag.data.message === 'AUTHORIZED') {
+    });
+    if(flag.data.message==='AUTHORIZED') {
       next();
     }
     else {
       res.status(401).json({
         message: 'Unauthorized'
       });
+      return;
     }
   }
-  catch(err){
+  catch(err) {
     res.status(401).json({
-      message: 'Please login'
+      message: 'Unauthorized'
     });
+    return;
   }
 };
 

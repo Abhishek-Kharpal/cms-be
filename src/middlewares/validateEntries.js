@@ -5,7 +5,8 @@ const validateEntries = async (req, res, next) => {
     where: { id: req.body.collectionId },
   });
   if(!collection) {
-    throw new Error('Invalid collection id');
+    res.status(400).json({ message: 'Invalid collection id' });
+    return;
   }
   const fields = await db.field.findAll({
     where: { collectionId: req.body.collectionId },
@@ -15,12 +16,15 @@ const validateEntries = async (req, res, next) => {
   const fieldNames = fields.map(field => field.name);
   if(entriesKeys.length !== fieldNames.length) {
     res.status(400).json({ message: 'Invalid number of fields' });
+    return;
   }
   entriesKeys.forEach(key => {
     if(!fieldNames.includes(key)) {
       res.status(400).json({ message: 'Invalid field name' });
+      return;
     }
   });
+  if(res.statusCode === 400) return;
   next();
 };
 
