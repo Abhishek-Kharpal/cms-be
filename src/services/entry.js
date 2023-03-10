@@ -7,6 +7,12 @@ const getAllEntries = async () => {
 };
 
 const createEntry = async (collectionId, entryValues) => {
+  const collection = await db.collection.findOne({
+    where: { id: collectionId }
+  });
+  if(!collection) {
+    throw new HttpError('400,Invalid collection id');
+  }
   const entry = await db.entry.create({
     collectionId,
     entryValues

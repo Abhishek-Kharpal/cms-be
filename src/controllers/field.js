@@ -8,7 +8,6 @@ const getAllFields = async (req, res) => {
     res.status(200).json(fields);
   }
   catch (err) {
-    console.log(err.constructor);
     switch (err.constructor) {
     case HttpError:
       res.status(err.code).json({ error: err.message });
@@ -24,10 +23,9 @@ const createField = async (req, res) => {
     const {name, type, collectionId} = req.body;
     const field = await fieldService.createField(name, type, collectionId);
     await entryService.addFieldToEntries(field.id);
-    res.status(200).json(field);
+    res.status(201).json(field);
   }
   catch (err) {
-    console.log(err.constructor);
     switch (err.constructor) {
     case HttpError:
       res.status(err.code).json({ error: err.message });
@@ -47,7 +45,6 @@ const updateField = async (req, res) => {
     res.status(200).json(field);
   }
   catch (err) {
-    console.log(err.constructor);
     switch (err.constructor) {
     case HttpError:
       res.status(err.code).json({ error: err.message });
@@ -66,7 +63,6 @@ const deleteField = async (req, res) => {
     res.status(204).json();
   }
   catch (err) {
-    console.log(err.constructor);
     switch (err.constructor) {
     case HttpError:
       res.status(err.code).json({ error: err.message });

@@ -1,5 +1,6 @@
 const db = require('../../database/models/index');
 const HttpError = require('../utils/customError');
+
 const getAllFields = async () => {
   const fields = await db.field.findAll();
   return fields;

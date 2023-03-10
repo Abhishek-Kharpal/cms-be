@@ -6,7 +6,6 @@ const getAllEntries = async (req, res) => {
     res.status(200).json(entries);
   }
   catch (err) {
-    console.log(err.constructor);
     switch (err.constructor) {
     case HttpError:
       res.status(err.code).json({ error: err.message });

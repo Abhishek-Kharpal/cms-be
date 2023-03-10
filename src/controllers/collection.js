@@ -7,7 +7,6 @@ const getAllCollections = async (req, res) => {
     res.status(200).json(collections);
   }
   catch (err) {
-    console.log(err.constructor);
     switch (err.constructor) {
     case HttpError:
       res.status(err.code).json({ error: err.message });
@@ -21,12 +20,10 @@ const getAllCollections = async (req, res) => {
 const createCollection = async (req, res) => {
   try{
     const {name} = req.body;
-    console.log(name);
     const collection = await collectionService.createCollection(name);
-    res.status(200).json(collection);
+    res.status(201).json(collection);
   }
   catch (err) {
-    console.log(err.constructor);
     switch (err.constructor) {
     case HttpError:
       res.status(err.code).json({ error: err.message });
