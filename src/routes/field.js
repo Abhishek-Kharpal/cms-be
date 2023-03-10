@@ -1,14 +1,16 @@
 const express = require('express');
 const fieldController = require('../controllers/field');
 const parser = require('../middlewares/parser');
+const validateToken = require('../middlewares/validateToken');
+
 const router = express.Router();
 
 router.route('/')
-  .get(fieldController.getAllFields)
-  .post(fieldController.createField);
+  .get(validateToken,fieldController.getAllFields)
+  .post(validateToken,fieldController.createField);
 
 router.route('/:id')
-  .put(parser,fieldController.updateField)
-  .delete(parser,fieldController.deleteField);
+  .put(validateToken,parser,fieldController.updateField)
+  .delete(validateToken,parser,fieldController.deleteField);
 
 module.exports = router;
