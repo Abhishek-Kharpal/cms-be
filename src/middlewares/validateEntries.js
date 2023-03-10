@@ -14,11 +14,11 @@ const validateEntries = async (req, res, next) => {
   const entriesKeys = Object.keys(entryValues);
   const fieldNames = fields.map(field => field.name);
   if(entriesKeys.length !== fieldNames.length) {
-    throw new Error('Invalid number of fields');
+    res.status(400).json({ message: 'Invalid number of fields' });
   }
   entriesKeys.forEach(key => {
     if(!fieldNames.includes(key)) {
-      throw new Error('Invalid field name');
+      res.status(400).json({ message: 'Invalid field name' });
     }
   });
   next();
