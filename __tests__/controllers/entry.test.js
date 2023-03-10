@@ -16,6 +16,18 @@ describe('When user tries to get all entries', () => {
     expect(mockResponse.status).toHaveBeenCalledWith(200);
     expect(mockResponse.json).toHaveBeenCalledWith(entries);
   });
+
+  it('should return 500 response code if service throws an error',async ()=>{
+    const mockRequest = {};
+    const mockResponse = {
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn()
+    };
+    jest.spyOn(entryService, 'getAllEntries').mockRejectedValue(new Error('Error'));
+    await entryController.getAllEntries(mockRequest, mockResponse);
+    expect(mockResponse.status).toHaveBeenCalledWith(500);
+    expect(mockResponse.json).toHaveBeenCalledWith({error: 'Error'});
+  });
 });
 
 describe('When user tries to create a new entry', () => {
@@ -39,6 +51,26 @@ describe('When user tries to create a new entry', () => {
     await entryController.createEntry(mockRequest, mockResponse);
     expect(mockResponse.status).toHaveBeenCalledWith(201);
     expect(mockResponse.json).toHaveBeenCalledWith(entry);
+  });
+
+  it('should return 500 response code if service throws an error',async ()=>{
+    const mockRequest = {
+      body: {
+        collectionId: 1,
+        entryValues: {
+          'name': 'XYZ',
+          'address': '4245',
+        }
+      }
+    };
+    const mockResponse = {
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn()
+    };
+    jest.spyOn(entryService, 'createEntry').mockRejectedValue(new Error('Error'));
+    await entryController.createEntry(mockRequest, mockResponse);
+    expect(mockResponse.status).toHaveBeenCalledWith(500);
+    expect(mockResponse.json).toHaveBeenCalledWith({error: 'Error'});
   });
 });
 
@@ -64,6 +96,26 @@ describe('When user tries to update an entry',()=>{
     expect(mockResponse.status).toHaveBeenCalledWith(200);
     expect(mockResponse.json).toHaveBeenCalledWith({...entriesList[1], id: entry});
   });
+
+  it('should return 500 response code if service throws an error',async ()=>{
+    const mockRequest = {
+      params: {
+        id: 1
+      },
+      body: {
+        collectionId: entriesList[1].collectionId,
+        entryValues: entriesList[1].entryValues
+      }
+    };
+    const mockResponse = {
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn()
+    };
+    jest.spyOn(entryService, 'updateEntry').mockRejectedValue(new Error('Error'));
+    await entryController.updateEntry(mockRequest, mockResponse);
+    expect(mockResponse.status).toHaveBeenCalledWith(500);
+    expect(mockResponse.json).toHaveBeenCalledWith({error: 'Error'});
+  });
 }); 
 
 describe('When user tries to delete an entry',()=>{
@@ -82,5 +134,21 @@ describe('When user tries to delete an entry',()=>{
     await entryController.deleteEntry(mockRequest, mockResponse);
     expect(mockResponse.status).toHaveBeenCalledWith(204);
     expect(mockResponse.json).toHaveBeenCalledWith();
+  });
+
+  it('should return 500 response code if service throws an error',async ()=>{
+    const mockRequest = {
+      params: {
+        id: 1
+      }
+    };
+    const mockResponse = {
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn()
+    };
+    jest.spyOn(entryService, 'deleteEntry').mockRejectedValue(new Error('Error'));
+    await entryController.deleteEntry(mockRequest, mockResponse);
+    expect(mockResponse.status).toHaveBeenCalledWith(500);
+    expect(mockResponse.json).toHaveBeenCalledWith({error: 'Error'});
   });
 });

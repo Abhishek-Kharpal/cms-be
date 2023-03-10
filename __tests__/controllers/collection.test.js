@@ -17,6 +17,18 @@ describe('When user tries to get all collections', () => {
     expect(mockResponse.json).toHaveBeenCalledWith(collections);
   });
 
+  it('should return 500 response if service throws an error',async ()=>{
+    const mockRequest = {};
+    const mockResponse = {
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn()
+    };
+    jest.spyOn(collectionService, 'getAllCollections').mockRejectedValue(new Error('Error'));
+    await collectionController.getAllCollections(mockRequest, mockResponse);
+    expect(mockResponse.status).toHaveBeenCalledWith(500);
+    expect(mockResponse.json).toHaveBeenCalledWith({error: 'Error'});
+  });
+
 });
 
 describe('When user tries to create a collection', () => {
@@ -36,6 +48,22 @@ describe('When user tries to create a collection', () => {
     await collectionController.createCollection(mockRequest, mockResponse);
     expect(mockResponse.status).toHaveBeenCalledWith(201);
     expect(mockResponse.json).toHaveBeenCalledWith(collection);
+  });
+
+  it('should return 500 response if service throws an error',async ()=>{
+    const mockRequest = {
+      body: {
+        name: collection.name
+      }
+    };
+    const mockResponse = {
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn()
+    };
+    jest.spyOn(collectionService, 'createCollection').mockRejectedValue(new Error('Error'));
+    await collectionController.createCollection(mockRequest, mockResponse);
+    expect(mockResponse.status).toHaveBeenCalledWith(500);
+    expect(mockResponse.json).toHaveBeenCalledWith({error: 'Error'});
   });
 
 });
